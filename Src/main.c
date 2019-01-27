@@ -40,10 +40,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <time.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "pwm.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,6 +70,8 @@ RTC_HandleTypeDef hrtc;
 TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN PV */
+
+
 
 /* USER CODE END PV */
 
@@ -326,6 +330,45 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+static void Set_Current_Time(void)
+{
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef DateToUpdate = {0};
+  time_t rawtime;
+  struct tm * timeinfo;
+  time ( &rawtime );
+  timeinfo = localtime( &rawtime );
+
+
+
+  /**Set the time to current time.
+  */
+  sTime.Hours = timeinfo->tm_hour;
+  sTime.Minutes = timeinfo->tm_min;
+  sTime.Seconds = timeinfo->tm_sec;
+
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  //DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
+  //DateToUpdate.Month = RTC_MONTH_JANUARY;
+  DateToUpdate.WeekDay = timeinfo->tm_wday;
+  DateToUpdate.Month = (timeinfo->tm_mon)+1;
+  DateToUpdate.Date = timeinfo->tm_mday;
+  DateToUpdate.Year = (timeinfo->tm_year)+1990-2000; // it is 100 years, but current time is years from 1990, so we set it to reference year 2000
+
+  if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
 /* USER CODE END 4 */
 
 /**
