@@ -45,6 +45,7 @@
 /* USER CODE BEGIN Includes */
 #include "pwm.h"
 #include "bluepill.h"
+#include "rtc.h"
 #include <time.h>
 
 /* USER CODE END Includes */
@@ -57,6 +58,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 
 /* USER CODE END PD */
 
@@ -83,7 +85,7 @@ static void MX_TIM1_Init(void);
 static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
-void Set_Current_Time(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -98,6 +100,7 @@ void Set_Current_Time(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
 
   /* USER CODE END 1 */
 
@@ -122,7 +125,11 @@ int main(void)
   MX_TIM1_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  Set_Current_Time(); // syncs up RTC with the system clock at compile time.
+  Set_Current_Time(hrtc); // syncs up RTC with the system clock at compile time.
+  //off_Led(); // turn off the LED
+  //on_Led();
+  //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
@@ -131,18 +138,21 @@ int main(void)
   while (1)
   {
 	  // Update date and time.
+	  HAL_RTC_GetTime(&hrtc,&userTime,RTC_FORMAT_BCD); // order is specific
 	  HAL_RTC_GetDate(&hrtc,&userDate,RTC_FORMAT_BCD);
-	  HAL_RTC_GetTime(&hrtc,&userTime,RTC_FORMAT_BCD);
 
-	  if(userDate.WeekDay==RTC_WEEKDAY_MONDAY){
+
+
+	  if(userDate.WeekDay==RTC_WEEKDAY_SUNDAY){
 		  // Yay!
-		  if(userTime.Hours==6){
+		  if(userTime.Hours==21){
 			  //Wakey Wakey dingdong
 			  setPWM(htim1,TIM_CHANNEL_1,255,128);
-			  on_Led();
+			  //on_Led();
 		  }
 		  else{
-			  off_Led();
+			  setPWM(htim1,TIM_CHANNEL_1,255,0);
+			  //off_Led();
 		  }
 	  }
     /* USER CODE END WHILE */
@@ -326,66 +336,17 @@ static void MX_TIM1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
 
-void Set_Current_Time(void)
-{
 
-  RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef DateToUpdate = {0};
-  time_t rawtime;
-  struct tm * timeinfo;
-  time ( &rawtime );
-  timeinfo = localtime( &rawtime );
-
-
-
-  /**Set the time to current time.
-  */
-  sTime.Hours = timeinfo->tm_hour;
-  sTime.Minutes = timeinfo->tm_min;
-  sTime.Seconds = timeinfo->tm_sec;
-
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  //DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
-  //DateToUpdate.Month = RTC_MONTH_JANUARY;
-  DateToUpdate.WeekDay = timeinfo->tm_wday;
-  DateToUpdate.Month = (timeinfo->tm_mon)+1;
-  DateToUpdate.Date = timeinfo->tm_mday;
-  DateToUpdate.Year = (timeinfo->tm_year)+1990-2000; // it is 100 years, but current time is years from 1990, so we set it to reference year 2000
-
-  if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN RTC_Init 2 */
-
-  /* USER CODE END RTC_Init 2 */
-
-}
 /* USER CODE END 4 */
 
 /**
