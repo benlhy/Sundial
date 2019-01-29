@@ -126,10 +126,7 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   Set_Current_Time(hrtc); // syncs up RTC with the system clock at compile time.
-  //off_Led(); // turn off the LED
-  //on_Led();
-  //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-  //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
 
   /* USER CODE END 2 */
 
@@ -143,15 +140,15 @@ int main(void)
 
 
 
-	  if(userDate.WeekDay==RTC_WEEKDAY_SUNDAY){
+	  if(userDate.WeekDay==RTC_WEEKDAY_MONDAY){
 		  // Yay!
-		  if(userTime.Hours==21){
+		  if(userTime.Hours==22){
 			  //Wakey Wakey dingdong
-			  setPWM(htim1,TIM_CHANNEL_1,255,128);
-			  //on_Led();
+			  setPWM(htim1,TIM_CHANNEL_2,255,128);
+
 		  }
 		  else{
-			  setPWM(htim1,TIM_CHANNEL_1,255,0);
+			  setPWM(htim1,TIM_CHANNEL_2,255,0);
 			  //off_Led();
 		  }
 	  }

@@ -42,7 +42,7 @@ void Set_Current_Time()
   DateToUpdate.Month = month;
   DateToUpdate.Date = 30;
   DateToUpdate.Date = day;
-  DateToUpdate.Year = year-2000; // it is 100 years, but current time is years from 1990, so we set it to reference year 2000
+  DateToUpdate.Year = year-2000; // it is 100 years, so we set it to reference year 2000
 
   if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
   {
