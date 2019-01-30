@@ -8,8 +8,11 @@ int dayofweek(int d, int m, int y)
     return ( y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
 }
 
+
+
 void Set_Current_Time()
 {
+
 
   RTC_TimeTypeDef sTime = {0};
   RTC_DateTypeDef DateToUpdate = {0};
@@ -31,18 +34,17 @@ void Set_Current_Time()
   {
     //handle error here
   }
-  int day = DAY;
-  int month= MONTH;
-  int year = YEAR;
+  uint8_t day = DAY;
+  uint8_t month= MONTH;
+  uint8_t year = YEAR;
 
 
   //DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
   //DateToUpdate.Month = RTC_MONTH_JANUARY;
   DateToUpdate.WeekDay = dayofweek(DAY,MONTH,YEAR);
-  DateToUpdate.Month = month;
-  DateToUpdate.Date = 30;
-  DateToUpdate.Date = day;
-  DateToUpdate.Year = year-2000; // it is 100 years, so we set it to reference year 2000
+  DateToUpdate.Month = MONTH;
+  DateToUpdate.Date = DAY;
+  DateToUpdate.Year = YEAR-2000; // it is 100 years, so we set it to reference year 2000
 
   if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
   {
