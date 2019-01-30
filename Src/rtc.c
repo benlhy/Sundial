@@ -22,7 +22,8 @@ void Set_Current_Time()
   time ( &rawtime );
   timeinfo = localtime( &rawtime );
 */
-
+  uint8_t hour = HOUR;
+  uint8_t minutes = MINUTE;
 
   /**Set the time to current time.
   */

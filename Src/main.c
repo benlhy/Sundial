@@ -142,14 +142,15 @@ int main(void)
 
 	  if(userDate.WeekDay==RTC_WEEKDAY_WEDNESDAY){
 		  // Yay!
-		  if(userTime.Hours==14){
+		  if(userTime.Hours==15){
 			  //Wakey Wakey dingdong
-			  setPWM(htim1,TIM_CHANNEL_2,500,50);
+			  setPWM(htim1,TIM_CHANNEL_2,500,100);
 			  HAL_Delay(1000);
 
 		  }
 		  else{
-			  setPWM(htim1,TIM_CHANNEL_2,500,0);
+			  setPWM(htim1,TIM_CHANNEL_2,500,1);
+			  HAL_Delay(1000);
 			  //off_Led();
 		  }
 	  }
