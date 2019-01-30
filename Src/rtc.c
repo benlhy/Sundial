@@ -30,7 +30,7 @@ void Set_Current_Time()
   sTime.Minutes = MINUTE;
   sTime.Seconds = SECOND;
 
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
   {
     //handle error here
   }
@@ -46,7 +46,7 @@ void Set_Current_Time()
   DateToUpdate.Date = DAY;
   DateToUpdate.Year = YEAR-2000; // it is 100 years, so we set it to reference year 2000
 
-  if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD) != HAL_OK)
+  if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN) != HAL_OK)
   {
     //Error_Handler();
 	//crap

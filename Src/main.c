@@ -135,20 +135,21 @@ int main(void)
   while (1)
   {
 	  // Update date and time.
-	  HAL_RTC_GetTime(&hrtc,&userTime,RTC_FORMAT_BCD); // order is specific
-	  HAL_RTC_GetDate(&hrtc,&userDate,RTC_FORMAT_BCD);
+	  HAL_RTC_GetTime(&hrtc,&userTime,RTC_FORMAT_BIN); // order is specific
+	  HAL_RTC_GetDate(&hrtc,&userDate,RTC_FORMAT_BIN);
 
 
 
-	  if(userDate.WeekDay==RTC_WEEKDAY_THURSDAY){
+	  if(userDate.WeekDay==RTC_WEEKDAY_WEDNESDAY){
 		  // Yay!
-		  if(1==1){
+		  if(userTime.Hours==14){
 			  //Wakey Wakey dingdong
-			  setPWM(htim1,TIM_CHANNEL_2,500,100);
+			  setPWM(htim1,TIM_CHANNEL_2,500,50);
+			  HAL_Delay(1000);
 
 		  }
 		  else{
-			  setPWM(htim1,TIM_CHANNEL_2,500,100);
+			  setPWM(htim1,TIM_CHANNEL_2,500,0);
 			  //off_Led();
 		  }
 	  }
