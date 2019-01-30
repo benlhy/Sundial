@@ -21,23 +21,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000029  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
-  9 .debug_info   0001300f  00000000  00000000  00020035  2**0
+  9 .debug_info   00012ff7  00000000  00000000  00020035  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002968  00000000  00000000  00033044  2**0
+ 10 .debug_abbrev 00002968  00000000  00000000  0003302c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00005955  00000000  00000000  000359ac  2**0
+ 11 .debug_loc    00005955  00000000  00000000  00035994  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_aranges 00000878  00000000  00000000  0003b308  2**3
+ 12 .debug_aranges 00000878  00000000  00000000  0003b2f0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000b48  00000000  00000000  0003bb80  2**3
+ 13 .debug_ranges 00000b48  00000000  00000000  0003bb68  2**3
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_line   00004ee6  00000000  00000000  0003c6c8  2**0
+ 14 .debug_line   00004ee8  00000000  00000000  0003c6b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    0000334f  00000000  00000000  000415ae  2**0
+ 15 .debug_str    00003347  00000000  00000000  00041598  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .comment      0000007c  00000000  00000000  000448fd  2**0
+ 16 .comment      0000007c  00000000  00000000  000448df  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  0000175c  00000000  00000000  0004497c  2**2
+ 17 .debug_frame  0000175c  00000000  00000000  0004495c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3804,12 +3804,12 @@ static void MX_GPIO_Init(void)
  8001660:	f899 3000 	ldrb.w	r3, [r9]
  8001664:	2b03      	cmp	r3, #3
  8001666:	d1f1      	bne.n	800164c <main+0x128>
-		  if(userTime.Hours==15){
- 8001668:	f898 3000 	ldrb.w	r3, [r8]
+		  if(userTime.Minutes==21){
+ 8001668:	f898 3001 	ldrb.w	r3, [r8, #1]
 			  setPWM(htim1,TIM_CHANNEL_2,500,1);
  800166c:	466c      	mov	r4, sp
-		  if(userTime.Hours==15){
- 800166e:	2b0f      	cmp	r3, #15
+		  if(userTime.Minutes==21){
+ 800166e:	2b15      	cmp	r3, #21
  8001670:	f44f 73fa 	mov.w	r3, #500	; 0x1f4
 			  setPWM(htim1,TIM_CHANNEL_2,500,100);
  8001674:	bf08      	it	eq
@@ -3901,8 +3901,8 @@ uint16_t pulse)
 	...
 
 08001718 <Set_Current_Time>:
-  uint8_t hour = HOUR;
-  uint8_t minutes = MINUTE;
+*/
+
 
   /**Set the time to current time.
   */
@@ -3912,14 +3912,14 @@ uint16_t pulse)
  800171a:	b537      	push	{r0, r1, r2, r4, r5, lr}
   sTime.Hours = HOUR;
  800171c:	f88d 3000 	strb.w	r3, [sp]
-  sTime.Minutes = MINUTE;
- 8001720:	2308      	movs	r3, #8
+  sTime.Minutes = (BUILD_MIN_CH0-'0')*10+(BUILD_MIN_CH1-'0');
+ 8001720:	2314      	movs	r3, #20
   RTC_TimeTypeDef sTime = {0};
  8001722:	2400      	movs	r4, #0
-  sTime.Minutes = MINUTE;
+  sTime.Minutes = (BUILD_MIN_CH0-'0')*10+(BUILD_MIN_CH1-'0');
  8001724:	f88d 3001 	strb.w	r3, [sp, #1]
   sTime.Seconds = SECOND;
- 8001728:	2319      	movs	r3, #25
+ 8001728:	231a      	movs	r3, #26
 
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
  800172a:	4d0e      	ldr	r5, [pc, #56]	; (8001764 <Set_Current_Time+0x4c>)

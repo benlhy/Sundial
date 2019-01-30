@@ -1,6 +1,19 @@
 #include "rtc.h"
 
 
+/*
+ * Reference
+ * https://stackoverflow.com/questions/11697820/how-to-use-date-and-time-predefined-macros-in-as-two-integers-then-stri
+ */
+#define BUILD_HOUR_CH0 (__TIME__[0])
+#define BUILD_HOUR_CH1 (__TIME__[1])
+
+#define BUILD_MIN_CH0 (__TIME__[3])
+#define BUILD_MIN_CH1 (__TIME__[4])
+
+#define BUILD_SEC_CH0 (__TIME__[6])
+#define BUILD_SEC_CH1 (__TIME__[7])
+
 int dayofweek(int d, int m, int y)
 {
     static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
@@ -22,13 +35,12 @@ void Set_Current_Time()
   time ( &rawtime );
   timeinfo = localtime( &rawtime );
 */
-  uint8_t hour = HOUR;
-  uint8_t minutes = MINUTE;
+
 
   /**Set the time to current time.
   */
   sTime.Hours = HOUR;
-  sTime.Minutes = MINUTE;
+  sTime.Minutes = (BUILD_MIN_CH0-'0')*10+(BUILD_MIN_CH1-'0');
   sTime.Seconds = SECOND;
 
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
