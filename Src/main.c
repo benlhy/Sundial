@@ -126,6 +126,7 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   Set_Current_Time(hrtc); // syncs up RTC with the system clock at compile time.
+  uint8_t pwm_flag = 0; // we only want to set the pwm once when the conditions are right, so we use a flag.
 
 
   /* USER CODE END 2 */
@@ -141,16 +142,22 @@ int main(void)
 
 
 	  if(userDate.WeekDay==RTC_WEEKDAY_THURSDAY){
+
 		  // Yay!
-		  if(userTime.Hours==13){
+		  if(userTime.Hours==14){
 			  //Wakey Wakey dingdong
-			  setPWM(htim1,TIM_CHANNEL_2,500,100);
-			  HAL_Delay(10);
+			  if (pwm_flag==0){
+				  setPWM(htim1,TIM_CHANNEL_2,500,250);
+				  pwm_flag = 1;
+				  HAL_Delay(10); // not sure why the light is so dim...
+			  }
+			  //HAL_Delay(10);
 
 		  }
 		  else{
 			  setPWM(htim1,TIM_CHANNEL_2,500,0);
-			  HAL_Delay(10);
+			  pwm_flag = 0;
+			  //HAL_Delay(10);
 			  //off_Led();
 		  }
 	  }
@@ -283,7 +290,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 4000;
+  htim1.Init.Prescaler = 2000;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 500;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
