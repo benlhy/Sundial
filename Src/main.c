@@ -140,17 +140,17 @@ int main(void)
 
 
 
-	  if(userDate.WeekDay==RTC_WEEKDAY_WEDNESDAY){
+	  if(userDate.WeekDay==RTC_WEEKDAY_THURSDAY){
 		  // Yay!
-		  if(userTime.Minutes==21){
+		  if(userTime.Hours==13){
 			  //Wakey Wakey dingdong
 			  setPWM(htim1,TIM_CHANNEL_2,500,100);
-			  HAL_Delay(1000);
+			  HAL_Delay(10);
 
 		  }
 		  else{
-			  setPWM(htim1,TIM_CHANNEL_2,500,1);
-			  HAL_Delay(1000);
+			  setPWM(htim1,TIM_CHANNEL_2,500,0);
+			  HAL_Delay(10);
 			  //off_Led();
 		  }
 	  }
@@ -283,7 +283,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 40000;
+  htim1.Init.Prescaler = 4000;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 500;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
